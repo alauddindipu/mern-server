@@ -35,10 +35,11 @@ app.get("/course/:id", (req, res) => {
 });
 
 app.get("/bookcategories/:category", (req, res) => {
-  category = req.params.category;
+  categoryParam = req.params.category;
   // console.log(id);
-  const selectedCategory = books.find(n => n.category === category);
+  const selectedCategory = books.filter(n => n.category === categoryParam);
   res.send(selectedCategory);
+  console.log(selectedCategory);
 });
 
 app.listen(port, () => {
