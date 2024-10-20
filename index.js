@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const course = require("./data/course.json");
-const books =require("./data/books.json");
+//const books =require("./data/books.json");
 
 app.use(cors());
 
@@ -15,11 +15,11 @@ app.use(cors());
 
 //server message
 app.get("/", (req, res) => {
-  res.send("Course Server Running");
+  res.send("Server Running");
 });
 
 app.get("/bookcategories", (req, res) => {
-  res.send(books);
+  res.send(course);
 });
 
 
@@ -37,7 +37,7 @@ app.get("/course/:id", (req, res) => {
 app.get("/bookcategories/:category", (req, res) => {
   categoryParam = req.params.category;
   // console.log(id);
-  const selectedCategory = books.filter(n => n.category === categoryParam);
+  const selectedCategory = course.filter(n => n.category === categoryParam);
   res.send(selectedCategory);
   console.log(selectedCategory);
 });
