@@ -34,6 +34,23 @@ async function run() {
     const categoryCollection = client.db("MernDB").collection("category");
     const productCollection = client.db("MernDB").collection("product");
 
+
+
+    app.post("/category", async (req, res) => {
+      const categories = req.body;
+      console.log(categories);
+      const result = await categoryCollection.insertOne(categories);
+      res.send(result);
+    });
+
+
+    app.get("/category", async (req, res) => {
+      const query = categoryCollection.find();
+      const result = await query.toArray();
+      res.send(result);
+    });
+
+
     // Fetch all users
     app.get("/users", async (req, res) => {
       const query = userCollection.find();
