@@ -31,6 +31,8 @@ async function run() {
     await client.connect();
 
     const userCollection = client.db("MernDB").collection("users");
+    const categoryCollection = client.db("MernDB").collection("category");
+    const productCollection = client.db("MernDB").collection("product");
 
     // Fetch all users
     app.get("/users", async (req, res) => {
@@ -88,43 +90,7 @@ async function run() {
       const result = await userCollection.deleteOne(query);
       res.send(result);
     });
-    // Messages Section
-    // Create message
-    app.post("/messages", async (req, res) => {
-      const { title, message, email } = req.body;
-      const messageCollection = client
-        .db("totTheMasterDB")
-        .collection("messages");
-
-      const newMessage = {
-        title,
-        message,
-        email,
-        createdAt: new Date(),
-      };
-
-      const result = await messageCollection.insertOne(newMessage);
-      res.send(result);
-    });
-    // Get all messages
-    app.get("/messages", async (req, res) => {
-      const messageCollection = client
-        .db("totTheMasterDB")
-        .collection("messages");
-      const messages = await messageCollection.find().toArray();
-      res.send(messages);
-    });
-    // Get message by id
-    app.get("/messages/:id", async (req, res) => {
-      const id = req.params.id;
-      const messageCollection = client
-        .db("totTheMasterDB")
-        .collection("messages");
-      const message = await messageCollection.findOne({
-        _id: new ObjectId(id),
-      });
-      res.send(message);
-    });
+    
 
     // await client.db("admin").command({ ping: 1 });
     console.log("Connected to MongoDB!");
