@@ -35,7 +35,29 @@ async function run() {
     const productCollection = client.db("MernDB").collection("product");
 
 
+    app.post("/products", async (req, res) => {
+      const products = req.body;
+      console.log(products);
+      const result = await productCollection.insertOne(products);
+      res.send(result);
+    });
 
+
+    //============show All products in table=================
+    app.get("/allproducts", async (req, res) => {
+      const query = productCollection.find();
+      const result = await query.toArray();
+      res.send(result);
+    });
+
+    //==========show in drop down list===============
+    app.get("/categories", async (req, res) => {
+      const query = categoryCollection.find();
+      const result = await query.toArray();
+      res.send(result);
+    });
+
+//============add category=================
     app.post("/category", async (req, res) => {
       const categories = req.body;
       console.log(categories);
@@ -43,7 +65,7 @@ async function run() {
       res.send(result);
     });
 
-
+//============show All category in table=================
     app.get("/category", async (req, res) => {
       const query = categoryCollection.find();
       const result = await query.toArray();
