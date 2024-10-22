@@ -42,6 +42,52 @@ async function run() {
       res.send(result);
     });
 
+    app.delete("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    app.get("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.findOne(query);
+      console.log(result);
+      res.send(result);
+    });
+
+    app.put("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const product = req.body;
+      console.log(id, product);
+
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+
+      const updatedProduct = {
+        $set: {
+          productName: product.productName,
+          description: product.description,
+        },
+      };
+
+      const result = await productCollection.updateOne(
+        filter,
+        updatedProduct,
+        option
+      );
+      res.send(result);
+    });
+
+//==========another way Total products==============using this===========
+app.get("/totalProducts", async (req, res) => {
+  const query = productCollection.find();
+  const result = await query.toArray();
+  res.send(result);
+});
 
     //============show All products in table=================
     app.get("/allproducts", async (req, res) => {
