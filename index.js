@@ -95,6 +95,18 @@ app.get("/totalProducts", async (req, res) => {
       const result = await query.toArray();
       res.send(result);
     });
+    // app.get("/bookcategories/:category", async (req, res) => {
+    //   const category = req.params.category;
+    //   const query = { category: category };
+    //   const result = await productCollection.findOne(query);
+    //   res.send(result);
+    // });
+
+    // app.get("/bookcategories/:category", (req, res) => {
+    //   categoryParam = req.params.category;
+    //   const selectedCategory = course.filter(n => n.category === categoryParam);
+    //   res.send(selectedCategory);
+    // });
 
     //==========show in drop down list===============
     app.get("/categories", async (req, res) => {
@@ -117,6 +129,7 @@ app.get("/totalProducts", async (req, res) => {
       const result = await query.toArray();
       res.send(result);
     });
+
 
 
     // Fetch all users
@@ -189,11 +202,7 @@ run().catch(console.error);
 app.get("/", (req, res) => {
   res.send("Server Running");
 });
-//=======================================================
-app.get("/bookcategories", (req, res) => {
-  res.send(course);
-});
-
+//===================USED JSON====================================
 
 app.get("/course", (req, res) => {
   res.send(course);
@@ -206,12 +215,17 @@ app.get("/course/:id", (req, res) => {
   res.send(selectedProducts);
 });
 
+app.get("/bookcategories", (req, res) => {
+  res.send(course);
+});
+
+//book categories by category name
 app.get("/bookcategories/:category", (req, res) => {
   categoryParam = req.params.category;
   // console.log(id);
   const selectedCategory = course.filter(n => n.category === categoryParam);
   res.send(selectedCategory);
-  console.log(selectedCategory);
+  //console.log(selectedCategory);
 });
 
 //==================================
