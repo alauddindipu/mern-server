@@ -33,6 +33,7 @@ async function run() {
     const userCollection = client.db("MernDB").collection("users");
     const categoryCollection = client.db("MernDB").collection("category");
     const productCollection = client.db("MernDB").collection("product");
+    const buyCollection = client.db("MernDB").collection("buy");
 
 
     app.post("/products", async (req, res) => {
@@ -90,6 +91,15 @@ async function run() {
       const result = await query.toArray();
       res.send(result);
     });
+
+    //============user-wise Buy Info===============//////////////////////////////////////
+app.get("/buySummary/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  const query = { userId: userId };
+  const result = await buyCollection.find(query).toArray();
+  res.send(result);
+   console.log(result);
+});
     //============Category-wise Products===============
     app.get("/bookCategoryWiseDetails/:category", async (req, res) => {
       const category = req.params.category;
@@ -98,6 +108,9 @@ async function run() {
       res.send(result);
       // console.log(result);
     });
+
+
+
     app.get("/product/:id", async (req, res) => {
       const _id = req.params.id;
       //const query = { _id: _id }
@@ -130,6 +143,13 @@ async function run() {
       res.send(result);
     });
 
+//==========Buy Summary============
+    app.get("/buySummary", async (req, res) => {
+      const query = buyCollection.find();
+      const result = await query.toArray();
+      res.send(result);
+    });
+
     app.get("/products", async (req, res) => {
       const query = productCollection.find();
       const result = await query.toArray();
@@ -150,7 +170,12 @@ async function run() {
       const result = await userCollection.findOne(query);
       res.send(result);
     });
-
+//save buyer information
+app.post("/buy", async (req, res) => {
+  const buyer = req.body;
+  const result = await buyCollection.insertOne(buyer);
+  res.send(result);
+});
     // Add a new user to the collection
     app.post("/users", async (req, res) => {
       const user = req.body;
