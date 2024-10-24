@@ -16,7 +16,7 @@ app.use(express.json());
 //   origin: ["http://localhost:5173", "https://course-react-routing-firebase.web.app"]
 // }));
 
-const uri= `mongodb+srv://${process.env.DB_USER}:${process.env.DB_SECRET}@cluster0.sahfy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_SECRET}@cluster0.sahfy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -37,43 +37,40 @@ async function run() {
 
     app.post("/products", async (req, res) => {
       const products = req.body;
-      console.log(products);
+      //console.log(products);
       const result = await productCollection.insertOne(products);
       res.send(result);
     });
 
     app.delete("/product/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      //console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await productCollection.deleteOne(query);
       res.send(result);
     });
-
+    // to edit values get in input form
     app.get("/product/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      //console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await productCollection.findOne(query);
-      console.log(result);
+      //console.log(result);
       res.send(result);
     });
-
+    //to update
     app.put("/product/:id", async (req, res) => {
       const id = req.params.id;
       const product = req.body;
-      console.log(id, product);
-
+      //console.log(id, product);
       const filter = { _id: new ObjectId(id) };
       const option = { upsert: true };
-
       const updatedProduct = {
         $set: {
           productName: product.productName,
           description: product.description,
         },
       };
-
       const result = await productCollection.updateOne(
         filter,
         updatedProduct,
@@ -81,32 +78,35 @@ async function run() {
       );
       res.send(result);
     });
-
-//==========another way Total products==============using this===========
-app.get("/totalProducts", async (req, res) => {
-  const query = productCollection.find();
-  const result = await query.toArray();
-  res.send(result);
-});
-
+    //==========another way Total products==============using this===========
+    app.get("/totalProducts", async (req, res) => {
+      const query = productCollection.find();
+      const result = await query.toArray();
+      res.send(result);
+    });
     //============show All products in table=================
     app.get("/allproducts", async (req, res) => {
       const query = productCollection.find();
       const result = await query.toArray();
       res.send(result);
     });
-    // app.get("/bookcategories/:category", async (req, res) => {
-    //   const category = req.params.category;
-    //   const query = { category: category };
-    //   const result = await productCollection.findOne(query);
-    //   res.send(result);
-    // });
-
-    // app.get("/bookcategories/:category", (req, res) => {
-    //   categoryParam = req.params.category;
-    //   const selectedCategory = course.filter(n => n.category === categoryParam);
-    //   res.send(selectedCategory);
-    // });
+    //============Category-wise Products===============
+    app.get("/bookCategoryWiseDetails/:category", async (req, res) => {
+      const category = req.params.category;
+      const query = { category: category };
+      const result = await productCollection.find(query).toArray();
+      res.send(result);
+      // console.log(result);
+    });
+    app.get("/product/:id", async (req, res) => {
+      const _id = req.params.id;
+      //const query = { _id: _id }
+      const query = { _id: new ObjectId(_id) };
+      const result = await productCollection.findOne(query).toArray();
+      res.send(result);
+      console.log(_id);
+      console.log(result);
+    });
 
     //==========show in drop down list===============
     app.get("/categories", async (req, res) => {
@@ -115,22 +115,26 @@ app.get("/totalProducts", async (req, res) => {
       res.send(result);
     });
 
-//============add category=================
+    //============add category=================
     app.post("/category", async (req, res) => {
       const categories = req.body;
-      console.log(categories);
+      //console.log(categories);
       const result = await categoryCollection.insertOne(categories);
       res.send(result);
     });
 
-//============show All category in table=================
+    //============show All category in table=================
     app.get("/category", async (req, res) => {
       const query = categoryCollection.find();
       const result = await query.toArray();
       res.send(result);
     });
 
-
+    app.get("/products", async (req, res) => {
+      const query = productCollection.find();
+      const result = await query.toArray();
+      res.send(result);
+    });
 
     // Fetch all users
     app.get("/users", async (req, res) => {
@@ -160,7 +164,7 @@ app.get("/totalProducts", async (req, res) => {
       const user = req.body;
       const filter = { _id: new ObjectId(id) };
       const option = { upsert: true };
-      console.log({ user });
+      //console.log({ user });
       const updatedUser = {
         $set: {
           displayName: user.displayName,
@@ -188,7 +192,7 @@ app.get("/totalProducts", async (req, res) => {
       const result = await userCollection.deleteOne(query);
       res.send(result);
     });
-    
+
 
     // await client.db("admin").command({ ping: 1 });
     console.log("Connected to MongoDB!");
@@ -204,9 +208,9 @@ app.get("/", (req, res) => {
 });
 //===================USED JSON====================================
 
-app.get("/course", (req, res) => {
-  res.send(course);
-});
+// app.get("/course", (req, res) => {
+//   res.send(course);
+// });
 
 app.get("/course/:id", (req, res) => {
   id = req.params.id;
@@ -222,10 +226,8 @@ app.get("/bookcategories", (req, res) => {
 //book categories by category name
 app.get("/bookcategories/:category", (req, res) => {
   categoryParam = req.params.category;
-  // console.log(id);
   const selectedCategory = course.filter(n => n.category === categoryParam);
   res.send(selectedCategory);
-  //console.log(selectedCategory);
 });
 
 //==================================
